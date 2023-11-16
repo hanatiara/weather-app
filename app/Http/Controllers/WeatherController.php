@@ -7,7 +7,8 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\File;
+use SoapVar;
 
 class WeatherController extends Controller
 {
@@ -22,12 +23,22 @@ class WeatherController extends Controller
        $this->location = env('LOCATION_URL');
     }
 
+    // Get semua list lokasi
+    private function getAllLocation(){
+        $file = File::get(base_path('city.list.json'));
+        $data = json_decode($file);
 
-    // Menampilkan
+        return $data;
+    }
+
+    // Menampilkan page
     public function show($location = "Malang")
     {
         // dd($this->getLocation());
         dd($this->fetchData($this->getLocation($location)->lat,$this->getLocation($location)->lon));
+        // dd(base_path('city.list.json'));
+        // dd($this->getAllLocation());
+
         return view('weather-index')->with([
             'key' => $this->apikey,
             'data' => $this->fetchData($this->getLocation($location)->lat,$this->getLocation($location)->lon),
@@ -49,6 +60,11 @@ class WeatherController extends Controller
 
     }
 
+    // Kalkulasi cuaca bedasarkan Kelembapan dan Suhu
+    private function calculateWeather($humidity, $temp){
+
+    }
+
     private function fetchData($lat, $lon){
         //lat = latitude
         //lon = longitude
@@ -61,11 +77,7 @@ class WeatherController extends Controller
 
         $result = json_decode($response->body());
 
-        // dd($result->city);
-
         return $result;
-
-
 
     }
 }
