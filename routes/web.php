@@ -14,4 +14,4 @@ use App\Http\Controllers\WeatherController;
 |
 */
 
-Route::get('/', [WeatherController::class, 'show']);
+Route::get('/', [WeatherController::class, 'fetchDataFromBackend']);
